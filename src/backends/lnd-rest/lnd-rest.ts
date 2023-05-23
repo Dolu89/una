@@ -57,6 +57,8 @@ export default class LndRest extends Backend {
     const body = this.prepareBody(data)
     const options = this.getRequestOptions(EHttpVerb.POST, '/v1/channels/transactions')
     const response = await this.request(options, body) as IPaymentSent
+    
+    if (response.code) throw new Error(`${response.message} (Code ${response.code})`)
 
     const result: IInvoicePaid = {
       paymentPreimage: base64ToHex(response.payment_preimage),
